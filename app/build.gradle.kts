@@ -64,4 +64,5 @@ dependencies {
     implementation((libs.androidx.camera.video))
     implementation((libs.androidx.camera.extensions))
     implementation((libs.androidx.compose.runtime))
+    implementation((libs.timber))
 }

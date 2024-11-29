@@ -13,6 +13,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.common.util.concurrent.ListenableFuture
+import timber.log.Timber
+
+val timber = Timber.tag("CameraPreview")
 
 @Composable
 fun CameraPreview(modifier: Modifier = Modifier) {
@@ -58,7 +61,7 @@ private fun setupCamera(
                 preview
             )
         } catch (e: Exception) {
-            e.printStackTrace()
+            timber.e(e)
         }
     }, ContextCompat.getMainExecutor(context))
 }

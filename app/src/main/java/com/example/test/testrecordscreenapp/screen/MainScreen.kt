@@ -27,7 +27,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         val permission = Manifest.permission.CAMERA
         val isGranted = remember { ContextCompat.checkSelfPermission(context, permission) == 0 }
         if (isGranted) {
-            ShowMessage(paddingValues = paddingValues)
+            CameraPreview()
         } else {
             val error = "Camera permission is not granted. Please enable it in settings."
             ShowMessage(error, paddingValues)

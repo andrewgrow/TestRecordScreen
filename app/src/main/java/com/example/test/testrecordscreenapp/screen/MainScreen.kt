@@ -43,7 +43,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         if (isGranted) {
             CameraWithOverlay(
                 isButtonActivated = isButtonActivated,
-                onButtonClick = { isButtonActivated = !isButtonActivated }
+                onRecordButtonClick = { isButtonActivated = !isButtonActivated }
             )
         } else {
             ShowMessage(
@@ -57,10 +57,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
 @Composable
 fun CameraWithOverlay(
     isButtonActivated: Boolean,
-    onButtonClick: (() -> Unit)? = null
+    onRecordButtonClick: (() -> Unit)? = null,
+    onBackButtonClick: (() -> Unit)? = null,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPreview(modifier = Modifier.fillMaxSize())
+        // Button Record
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -68,11 +70,29 @@ fun CameraWithOverlay(
                 .size(100.dp)
                 .background(if (isButtonActivated) Color.Red else Color.Gray, shape = CircleShape)
                 .clickable {
-                    onButtonClick?.invoke()
+                    onRecordButtonClick?.invoke()
                 },
             contentAlignment = Alignment.Center
         ) {
             Text("Record")
+        }
+
+        // Button Back
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(36.dp)
+                .size(60.dp)
+                .background(Color.DarkGray, shape = CircleShape)
+                .clickable {
+                    onBackButtonClick?.invoke()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Back",
+                color = Color.White
+            )
         }
     }
 }

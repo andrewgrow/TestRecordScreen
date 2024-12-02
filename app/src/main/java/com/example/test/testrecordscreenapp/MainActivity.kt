@@ -11,14 +11,16 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.test.testrecordscreenapp.screen.MainScreen
-import com.example.test.testrecordscreenapp.screen.ScreenRecordManager
 import com.example.test.testrecordscreenapp.screen.ScreenRecordService
 import com.example.test.testrecordscreenapp.ui.theme.TestRecordScreenAppTheme
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     private val mediaProjectionManager: MediaProjectionManager by lazy {
         getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
     }
+
+    private val outputPath: String by lazy { "${externalCacheDir?.absolutePath}/screen_record.mp4" }
 
     private var isRecordingRequested = false
 
@@ -41,14 +43,19 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleRecordButtonClick() {
-        val outputPath = "${externalCacheDir?.absolutePath}/screen_record.mp4"
-        isRecordingRequested = true
-        ScreenRecordService.startService(
-            this,
-            resources.displayMetrics,
-            outputPath
-        )
-        startMediaProjectionRequest()
+        if (ScreenRecordService.isRecording()) {
+            Timber.e("Stop recording via button click")
+            ScreenRecordService.stopService(this)
+        } else {
+            Timber.w("Recording path: $outputPath")
+            isRecordingRequested = true
+            ScreenRecordService.startService(
+                this,
+                resources.displayMetrics,
+                outputPath
+            )
+            startMediaProjectionRequest()
+        }
     }
 
     override fun onDestroy() {
@@ -82,11 +89,9 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_MEDIA_PROJECTION) {
             if (resultCode == RESULT_OK && isRecordingRequested) {
-                // 3. Если разрешение получено
                 val mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data!!)
                 ScreenRecordService.provideMediaProjection(mediaProjection)
             } else {
-                // 4. Если разрешение не получено, останавливаем сервис
                 ScreenRecordService.stopService(this)
                 isRecordingRequested = false
             }

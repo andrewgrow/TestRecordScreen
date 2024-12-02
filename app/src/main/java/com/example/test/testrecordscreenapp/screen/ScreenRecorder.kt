@@ -21,6 +21,14 @@ class ScreenRecorder(
         registerMediaProjectionCallback()
         setupMediaRecorder()
         val surface: Surface = mediaRecorder.surface
+
+        if (metrics.widthPixels <= 0 || metrics.heightPixels <= 0) {
+            Timber.e("Invalid display metrics: width=${metrics.widthPixels}, height=${metrics.heightPixels}")
+            return
+        } else {
+            Timber.w("Current display metrics: width=${metrics.widthPixels}, height=${metrics.heightPixels}")
+        }
+
         virtualDisplay = mediaProjection.createVirtualDisplay(
             "ScreenRecorder",
             metrics.widthPixels,
@@ -32,7 +40,7 @@ class ScreenRecorder(
             null
         )
         mediaRecorder.start()
-        Timber.w("Recording started successfully")
+        Timber.w("Recording started successfully, virtualDisplay: $virtualDisplay")
     }
 
     private fun registerMediaProjectionCallback() {
@@ -60,13 +68,13 @@ class ScreenRecorder(
         try {
             mediaRecorder.stop()
             mediaRecorder.reset()
-            Timber.d("Recording stopped successfully")
+            Timber.w("Recording stopped successfully")
         } catch (e: Exception) {
             Timber.e(e, "Error stopping MediaRecorder")
         } finally {
             virtualDisplay?.release()
             virtualDisplay = null
-            Timber.d("VirtualDisplay released")
+            Timber.w("VirtualDisplay released")
         }
     }
 }

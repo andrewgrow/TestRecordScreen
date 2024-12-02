@@ -23,10 +23,10 @@ class ScreenRecorder(
         val surface: Surface = mediaRecorder.surface
 
         if (metrics.widthPixels <= 0 || metrics.heightPixels <= 0) {
-            Timber.e("Invalid display metrics: width=${metrics.widthPixels}, height=${metrics.heightPixels}")
+            Timber.e("Invalid display metrics: widthPixels=${metrics.widthPixels}, heightPixels=${metrics.heightPixels}")
             return
         } else {
-            Timber.w("Current display metrics: width=${metrics.widthPixels}, height=${metrics.heightPixels}")
+            Timber.w("Current display metrics: widthPixels=${metrics.widthPixels}, heightPixels=${metrics.heightPixels}")
         }
 
         virtualDisplay = mediaProjection.createVirtualDisplay(

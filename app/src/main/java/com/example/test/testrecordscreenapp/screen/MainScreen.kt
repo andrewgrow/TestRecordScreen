@@ -1,6 +1,8 @@
 package com.example.test.testrecordscreenapp.screen
 
 import android.Manifest
+import android.content.Context
+import android.media.projection.MediaProjection
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,14 +32,17 @@ import androidx.compose.runtime.setValue
 fun MainScreen(
     modifier: Modifier = Modifier,
     onBackButtonClickListener: (() -> Unit)? = null,
+    onRecordButtonClicked: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    var isButtonActivated by remember { mutableStateOf(false) }
+
     var isGranted by remember { mutableStateOf(false) }
     val permission = Manifest.permission.CAMERA
     LaunchedEffect(context) {
         isGranted = ContextCompat.checkSelfPermission(context, permission) == 0
     }
+
+    var isRecording by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -45,8 +50,8 @@ fun MainScreen(
     ) { paddingValues ->
         if (isGranted) {
             CameraWithOverlay(
-                isButtonActivated = isButtonActivated,
-                onRecordButtonClick = { isButtonActivated = !isButtonActivated },
+                isButtonActivated = false,
+                onRecordButtonClick = { onRecordButtonClicked?.invoke() },
                 onBackButtonClick = onBackButtonClickListener
             )
         } else {

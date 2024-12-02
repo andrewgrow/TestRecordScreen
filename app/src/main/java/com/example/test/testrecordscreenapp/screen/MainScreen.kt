@@ -27,7 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    onBackButtonClickListener: (() -> Unit)? = null,
+) {
     val context = LocalContext.current
     var isButtonActivated by remember { mutableStateOf(false) }
     var isGranted by remember { mutableStateOf(false) }
@@ -43,7 +46,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
         if (isGranted) {
             CameraWithOverlay(
                 isButtonActivated = isButtonActivated,
-                onRecordButtonClick = { isButtonActivated = !isButtonActivated }
+                onRecordButtonClick = { isButtonActivated = !isButtonActivated },
+                onBackButtonClick = onBackButtonClickListener
             )
         } else {
             ShowMessage(

@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TestRecordScreenAppTheme {
-                MainScreen()
+                MainScreen( onBackButtonClickListener = ::onBackButtonClicked )
             }
         }
     }
@@ -38,6 +38,10 @@ class MainActivity : ComponentActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
+
+    fun onBackButtonClicked() {
+        onBackPressedDispatcher.onBackPressed()
     }
 }
 
